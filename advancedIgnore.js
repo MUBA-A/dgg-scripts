@@ -52,6 +52,9 @@ const settingItems = [
   new SettingItem("hideNewUsers", false, "checkbox", {
     text: "Hide new users",
   }),
+  new SettingItem("hideGreentexts", false, "checkbox", {
+    text: "Ignore NPCs who think they have an interesting comment to make",
+  }),
 ];
 const settings = new Settings("Advanced Ignore", settingItems, "fritz-");
 settings.build();
@@ -77,6 +80,8 @@ const checkEmbed = (embedId) =>
 const checkNSFW = (msgData) =>
   regexNSFW.test(msgData.data) &&
   settings.ignoredNSFW.includes(msgData.nick.toLowerCase());
+
+const checkGreentext = (msgData) => msgData.data.startsWith('>');
 
 function checkIgnored(msgData) {
   const username = msgData.nick.toLowerCase();
@@ -109,7 +114,8 @@ function lookAtMessage() {
       !msgData.features.includes("moderator") &&
       checks(msgData)) ||
     (settings.hideSub && isSubMsg(msgType)) ||
-    (settings.hideNewUsers && isNewUser(msgData))
+    (settings.hideNewUsers && isNewUser(msgData)) ||
+    (settings.hideGreentexts && checkGreentext(msgData))
   ) {
     msg = 'OBAMNA {data: "LULW"}';
   }
