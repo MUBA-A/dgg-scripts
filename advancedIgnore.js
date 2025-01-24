@@ -87,6 +87,8 @@ function checkIgnored(msgData) {
   );
 }
 
+const checkGreentext = (msgData) => msgData.data.startsWith('>');
+
 const checks = (msgData) =>
   checkMention(msgData) &&
   (checkEmbed(msgData?.watching?.id) ||
@@ -109,7 +111,8 @@ function lookAtMessage() {
       !msgData.features.includes("moderator") &&
       checks(msgData)) ||
     (settings.hideSub && isSubMsg(msgType)) ||
-    (settings.hideNewUsers && isNewUser(msgData))
+    (settings.hideNewUsers && isNewUser(msgData)) ||
+    (settings.hideGreentexts && checkGreentext(msgData))
   ) {
     msg = 'OBAMNA {data: "LULW"}';
   }
