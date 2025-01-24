@@ -78,6 +78,8 @@ const checkNSFW = (msgData) =>
   regexNSFW.test(msgData.data) &&
   settings.ignoredNSFW.includes(msgData.nick.toLowerCase());
 
+const checkGreentext = (msgData) => msgData.data.startsWith('>');
+
 function checkIgnored(msgData) {
   const username = msgData.nick.toLowerCase();
   return (
@@ -86,6 +88,8 @@ function checkIgnored(msgData) {
     settings.harshIgnored.some((v) => msgData.data.includes(v))
   );
 }
+
+
 
 const checks = (msgData) =>
   checkMention(msgData) &&
@@ -109,7 +113,8 @@ function lookAtMessage() {
       !msgData.features.includes("moderator") &&
       checks(msgData)) ||
     (settings.hideSub && isSubMsg(msgType)) ||
-    (settings.hideNewUsers && isNewUser(msgData))
+    (settings.hideNewUsers && isNewUser(msgData)) ||
+    (settings.hideGreentexts && checkGreentext(msgData))
   ) {
     msg = 'OBAMNA {data: "LULW"}';
   }
